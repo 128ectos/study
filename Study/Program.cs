@@ -74,6 +74,19 @@ namespace Study
                 "foobar" 
             }
             .ForEach(x => log($"{x} -> {IsPalindromePermutation(x)}"));
+
+            log(string.Empty);
+            log(string.Empty);
+
+            log("Problem 1.5");
+            new List<Tuple<string, string>>
+            {
+                new Tuple<string, string>("pale", "ple"),
+                new Tuple<string, string>("pales", "pale"),
+                new Tuple<string, string>("pale", "bale"),
+                new Tuple<string, string>("pale", "bake"),
+            }
+            .ForEach(x => log($"'{x.Item1}', '{x.Item2}' -> '{IsOneEditAway(x.Item1, x.Item2)}'"));
         }
 
         // Start off just inlining problems in this file to get bootstrapped
@@ -178,6 +191,34 @@ namespace Study
 
             var numUnevenChars = charCounts.Count(x => x.Value % 2 == 1);
             return numUnevenChars == 0 || numUnevenChars == 1;
+        }
+
+        // Problem 1.5
+        static bool IsOneEditAway(string a, string b)
+        {
+            var diff = a.Length - b.Length;
+            if(-2 >= diff || diff >= 2)
+            {
+                return false;
+            }
+
+            var aCharCountMap = a.GroupBy(x => x).ToDictionary(x => x.Key, x => x.Count());
+            var noMatch = new List<char>();
+            foreach (var c in b)
+            {
+                if(aCharCountMap.ContainsKey(c))
+                {
+                    aCharCountMap[c]--;
+                }
+                else
+                {
+                    noMatch.Add(c);
+                }
+            }
+
+            if(noMatch.Count() >= 2) { return false; }
+            var totDiffCount = aCharCountMap.Values.Sum();
+            return totDiffCount == 0 || totDiffCount == 1;
         }
 
         #endregion
