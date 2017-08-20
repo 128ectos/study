@@ -194,6 +194,7 @@ namespace Study
         }
 
         // Problem 1.5
+        // todo rework this to handle string "edit" rules instead of just char checks
         static bool IsOneEditAway(string a, string b)
         {
             var diff = a.Length - b.Length;
