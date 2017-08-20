@@ -43,6 +43,22 @@ namespace Study
             .ToList()
             .ForEach(x => log($"isPermutation(\"{x.Item1}\",\"{x.Item2}\") -> {IsPermutation(x.Item1, x.Item2)}"));
 
+            log(string.Empty);
+            log(string.Empty);
+
+            log("Problem 1.3");
+            new Dictionary<string, int>
+            {
+                // 0123456789123456
+                { "Mr John Smith    ", 13 },
+                { "Foo bar baz    ", 11 },
+                { "Foo bar  ", 7 },
+                { "a b cc    ", 6 },
+                { "a b  c      ", 6 }
+            }
+            .ToList()
+            .ForEach(x => log($"'{x.Key}' -> '{Urlify(x.Key, x.Value)}'"));
+
         }
 
         // Start off just inlining problems in this file to get bootstrapped
@@ -103,6 +119,42 @@ namespace Study
             }
 
             return charCounts.Values.All(x => x == 0);
+        }
+
+        // Problem 1.3
+        static string Urlify(string str, int trueLen)
+        {
+            var charAry = str.ToCharArray();
+            var shift = str.Length - trueLen;
+            
+            for(var i = trueLen - 1; i >= 0; i--)
+            {
+                var next = str[i];
+                if (next != ' ')
+                {
+                    Swap(charAry, i, i + shift);
+                }
+                else
+                {
+                    charAry[i + shift - 2] = '%';
+                    charAry[i + shift - 1] = '2';
+                    charAry[i + shift] = '0';
+                    shift -= 2;
+                }
+            }
+
+            return new string(charAry);
+        }
+
+        #endregion
+
+        #region Util
+
+        static void Swap<T>(T[] ary, int iA, int iB)
+        {
+            var tmp = ary[iA];
+            ary[iA] = ary[iB];
+            ary[iB] = tmp;
         }
 
         #endregion
