@@ -59,6 +59,21 @@ namespace Study
             .ToList()
             .ForEach(x => log($"'{x.Key}' -> '{Urlify(x.Key, x.Value)}'"));
 
+            log(string.Empty);
+            log(string.Empty);
+
+            log("Problem 1.4");
+            new List<string>
+            {
+                "Tact Coa",
+                "no",
+                "tttt",
+                "",
+                "foof",
+                "fooof",
+                "foobar" 
+            }
+            .ForEach(x => log($"{x} -> {IsPalindromePermutation(x)}"));
         }
 
         // Start off just inlining problems in this file to get bootstrapped
@@ -144,6 +159,25 @@ namespace Study
             }
 
             return new string(charAry);
+        }
+
+        // Problem 1.4
+        static bool IsPalindromePermutation(string str)
+        {
+            var charCounts = new Dictionary<char, int>();
+            foreach (var c in str.ToLowerInvariant())
+            {
+                if(c == ' ') { continue; }
+                if (charCounts.ContainsKey(c))
+                {
+                    charCounts[c]++;
+                    continue;
+                }
+                charCounts[c] = 1;
+            }
+
+            var numUnevenChars = charCounts.Count(x => x.Value % 2 == 1);
+            return numUnevenChars == 0 || numUnevenChars == 1;
         }
 
         #endregion
