@@ -86,7 +86,7 @@ namespace Study
                 new Tuple<string, string>("pale", "bale"),
                 new Tuple<string, string>("pale", "bake"),
             }
-            .ForEach(x => log($"'{x.Item1}', '{x.Item2}' -> '{IsOneEditAway(x.Item1, x.Item2)}'"));
+            .ForEach(x => log($"'{x.Item1}', '{x.Item2}' -> '{IsMaxOneEditAway(x.Item1, x.Item2)}'"));
         }
 
         // Start off just inlining problems in this file to get bootstrapped
@@ -220,6 +220,77 @@ namespace Study
             if(noMatch.Count() >= 2) { return false; }
             var totDiffCount = aCharCountMap.Values.Sum();
             return totDiffCount == 0 || totDiffCount == 1;
+        }
+
+        static bool IsMaxOneEditAway(string a, string b)
+        {
+            var lenDiff = a.Length - b.Length;
+            if(lenDiff >= 2 || lenDiff <= -2) { return false; }
+
+            if (lenDiff == 1) // Removed case
+            {
+                return IsOneCharRemoved(a, b);
+            }
+            else if (lenDiff == -1) // Added case
+            {
+                return IsOneCharRemoved(b, a);
+            }
+            else // Equal len case
+            {
+                var charDiff = false;
+                for (var i = 0; i < a.Length; i++)
+                {
+                    if (a[i] == b[i])
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        if (charDiff == true)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            charDiff = true;
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+
+        static bool IsOneCharRemoved(string a, string b)
+        {
+            var charRm = false;
+            for(var i = 0; i < a.Length; i++)
+            {
+                if(i == a.Length - 1 && !charRm) { return true; }
+                if(!charRm)
+                {
+                    if(a[i] == b[i])
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        charRm = true;
+                        continue;
+                    }
+                }
+                else // One char has already been removed
+                {
+                    if(a[i] == b[i-1])
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        return false; // Char is diff
+                    }
+                }
+            }
+            return true;
         }
 
         #endregion
