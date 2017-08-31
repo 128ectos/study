@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Study
 {
@@ -87,6 +88,19 @@ namespace Study
                 new Tuple<string, string>("pale", "bake"),
             }
             .ForEach(x => log($"'{x.Item1}', '{x.Item2}' -> '{IsMaxOneEditAway(x.Item1, x.Item2)}'"));
+
+            log(string.Empty);
+            log(string.Empty);
+
+            log("Problem 1.6");
+            new List<string>
+            {
+                "aabccccaa",
+                "aabcccaa",
+                "aabcccccaaa",
+                "foo",
+                "foooooooo"
+            }.ForEach(x => log($"'{x}' -> '{Compress(x)}'"));
         }
 
         // Start off just inlining problems in this file to get bootstrapped
@@ -194,7 +208,6 @@ namespace Study
         }
 
         // Problem 1.5
-        // todo rework this to handle string "edit" rules instead of just char checks
         static bool IsOneEditAway(string a, string b)
         {
             var diff = a.Length - b.Length;
@@ -291,6 +304,31 @@ namespace Study
                 }
             }
             return true;
+        }
+
+        // Problem 1.6
+        static string Compress(string str)
+        {
+            if(string.IsNullOrEmpty(str) || str.Length == 1) { return str; }
+            var result = new StringBuilder();
+            var nextCount = 1;
+            var nextChar = str[0];
+            for(var i = 1; i < str.Length; i++)
+            {
+                if(str[i] == nextChar)
+                {
+                    nextCount++;
+                }
+                else
+                {
+                    result.Append(nextCount).Append(nextChar);
+                    nextChar = str[i];
+                    nextCount = 1;
+                }
+            }
+            result.Append(nextCount).Append(nextChar);
+            var res = result.ToString();
+            return res.Length > str.Length ? str : res;
         }
 
         #endregion
